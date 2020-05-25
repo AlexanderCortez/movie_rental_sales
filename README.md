@@ -26,6 +26,20 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+# How to start?
+
+Create a `.env.development` file at the root of the project, replacing XXXX values with user specific
+
+
+```bash
+NODE_ENV=XXXX
+DATABASE_HOST=XXXX
+DATABASE_USERNAME=XXXX
+DATABASE_NAME=XXXX
+DATABASE_PASSWORD=XXXX
+DATABASE_PORT=XXXX
+```
+
 ## Installation
 
 ```bash
