@@ -23,10 +23,10 @@ export class Movie {
   @Column()
   stock: number;
 
-  @Column()
+  @Column('double precision')
   rentPrice: number;
 
-  @Column()
+  @Column('double precision')
   salePrice: number;
 
   @Column({ default: 0 })
@@ -35,15 +35,15 @@ export class Movie {
   @Column({ default: 0 })
   dislikes: number;
 
-  @Column()
+  @Column({ default: true })
   available: boolean;
 
   @Column({ default: true })
   active: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  updatedAt: Date;
 }

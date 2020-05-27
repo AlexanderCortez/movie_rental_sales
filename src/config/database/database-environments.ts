@@ -27,7 +27,7 @@ export const databaseConfig: { [environment: string]: IDatabaseConfig } = {
     host: DATABASE_HOST,
     port: DATABASE_PORT || 5434,
     username: DATABASE_USERNAME,
-    database: 'movies_test',
+    database: DATABASE_NAME,
     password: DATABASE_PASSWORD,
     entities: ['src/**/*.entity{.ts,.js}'],
   },
