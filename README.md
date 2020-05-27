@@ -46,6 +46,19 @@ DATABASE_PORT=XXXX
 $ npm install
 ```
 
+## Running migrations
+
+```bash
+# generate a new Migration
+$ npm run migration:generate [name_of_migration]
+
+# up a migration
+$ npm run migration:run
+
+# rollback a migration
+$ npm run migration:revert
+```
+
 ## Running the app in development with Docker
 
 ```bash
