@@ -1,6 +1,8 @@
 import * as Faker from 'faker';
 import { factory, define } from 'typeorm-factories';
 import { Movie } from '@entities/movie.entity';
+import { User } from '@entities/user.entity';
+import { Role } from '@entities/role.entity';
 
 define(Movie, (faker: typeof Faker) => {
   const movie = new Movie();
@@ -19,6 +21,32 @@ define(Movie, (faker: typeof Faker) => {
   movie.createdAt = date.past();
   movie.updatedAt = date.future();
   return movie;
+});
+
+define(User, (faker: typeof Faker) => {
+  const user = new User();
+  const role = new Role();
+  const { random, name, internet } = faker;
+  user.id = random.number();
+  user.name = name.findName();
+  user.email = internet.email();
+  user.password = internet.password();
+  
+  role.id = random.number();
+  role.name = 'admin';
+  
+  user.role = role;
+  user.confirmed = true;
+  user.active = true;
+  return user;
+});
+
+define(Role, (faker: typeof Faker) => {
+  const { lorem, random } = faker;
+  const role = new Role();
+  role.id = random.number();
+  role.name = lorem.word();
+  return role;
 });
 
 export default factory;

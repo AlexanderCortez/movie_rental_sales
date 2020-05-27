@@ -17,6 +17,7 @@ export const databaseConfig: { [environment: string]: IDatabaseConfig } = {
     database: DATABASE_NAME,
     password: DATABASE_PASSWORD,
     entities: ['dist/src/**/*.entity{.ts,.js}'],
+    seeds: ['src/seeds/**/*{.ts,.js}'],
     migrations: ['dist/src/migrations/*{.ts,.js}'],
     cli: {
       migrationsDir: 'src/migrations'
