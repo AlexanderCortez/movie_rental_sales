@@ -40,10 +40,25 @@ DATABASE_PASSWORD=XXXX
 DATABASE_PORT=XXXX
 ```
 
-## Installation
+## Running Locally
 
 ```bash
+#1 Installation
 $ npm install
+
+#2 run in development
+$ npm run docker:dev:start
+
+#3 get inside the docker container
+$ docker container exec -it [container_name] bash
+# Example,
+$ docker container exec -it movieapp bash
+
+#4 run migrations
+$ npm run migration:run
+
+#5 run seeds
+$ npm run seed:run
 ```
 
 ## Running migrations
@@ -57,6 +72,13 @@ $ npm run migration:run
 
 # rollback a migration
 $ npm run migration:revert
+```
+
+## Running seeds
+
+```bash
+# npm seed
+$ npm run seed:run
 ```
 
 ## Running the app in development with Docker

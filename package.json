@@ -25,7 +25,8 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run build && npm run typeorm -- migration:generate -n",
     "migration:run": "npm run typeorm migration:run",
-    "migration:revert": "npm run typeorm migration:revert"
+    "migration:revert": "npm run typeorm migration:revert",
+    "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
@@ -33,6 +34,8 @@
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/swagger": "^4.5.8",
     "@nestjs/typeorm": "^7.0.1",
+    "@types/bcrypt": "^3.0.0",
+    "bcrypt": "^4.0.1",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "git-repo-info": "^2.1.1",
@@ -41,7 +44,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "swagger-ui-express": "^4.1.4",
-    "typeorm": "^0.2.25"
+    "typeorm": "^0.2.25",
+    "typeorm-seeding": "^1.6.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
@@ -84,7 +88,9 @@
     "moduleNameMapper": {
       "^@config/(.*)": "<rootDir>/src/config/$1",
       "^@entities/(.*)": "<rootDir>/src/entities/$1",
-      "^@movie-module/(.*)": "<rootDir>/src/modules/movie/$1"
+      "^@movie-module/(.*)": "<rootDir>/src/modules/movie/$1",
+      "^@user-module/(.*)": "<rootDir>/src/modules/user/$1",
+      "^@role-module/(.*)": "<rootDir>/src/modules/role/$1"
     }
   }
 }

@@ -14,7 +14,9 @@
       "@config/*": ["./src/config/*"],
       "@entities/*": ["./src/entities/*"],
       "@movie-module/*": ["./src/modules/movie/*"],
-      "@app-module/*": ["./src/modules/app/*"]
+      "@app-module/*": ["./src/modules/app/*"],
+      "@user-module/*": ["./src/modules/user/*"],
+      "@role-module/*": ["./src/modules/role/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
