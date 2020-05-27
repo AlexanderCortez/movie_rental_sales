@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Movie } from '@entities/movie.entity';
-import { IBody } from '@movie-module/interfaces';
+import { MovieDTO } from '@movie-module/dto/movie.dto';
 
 @Injectable()
 export class MovieService {
@@ -16,13 +16,13 @@ export class MovieService {
     return this.movieRepository.find({ active: true });
   }
 
-  create(body: IBody): Promise<Movie> {
-    const entry = plainToClass(IBody, body);
+  create(body: MovieDTO): Promise<Movie> {
+    const entry = plainToClass(MovieDTO, body);
     return this.movieRepository.save(entry);
   }
 
-  async update(id: number, body: IBody): Promise<Movie> {
-    const updates = plainToClass(IBody, body);
+  async update(id: number, body: MovieDTO): Promise<Movie> {
+    const updates = plainToClass(MovieDTO, body);
     const movie = await this.findOne(id);
     return this.movieRepository.save({
       ...movie,

@@ -1,9 +1,8 @@
 import {
   validateSync,
 } from 'class-validator';
-import { BodyValidation } from '@movie-module/dto/body-validation.dto';
+import { MovieDTO } from '@movie-module/dto/movie.dto';
 import { MessageCodeError } from '@config/errors/';
-import { IBody } from '@movie-module/interfaces';
 
 
 type TValidation = {
@@ -12,9 +11,9 @@ type TValidation = {
 }
 
 export class ValidateRequest {
-  private body: IBody;
+  private body: MovieDTO;
 
-  constructor(body: IBody) {
+  constructor(body: MovieDTO) {
     this.body = body;
   }
 
@@ -23,7 +22,7 @@ export class ValidateRequest {
       valid: true,
       error: null,
     }
-    const bodyValidation = new BodyValidation(this.body);
+    const bodyValidation = new MovieDTO(this.body);
     const [validator] = validateSync(bodyValidation);
     if (validator) {
       const newError = {

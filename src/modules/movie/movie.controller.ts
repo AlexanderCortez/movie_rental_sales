@@ -5,16 +5,20 @@ import {
   Body,
   Put,
   Param,
-  HttpException,
   UseInterceptors,
   Delete,
+  NotFoundException,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { MovieService } from '@movie-module/movie.service';
-import { IBody, IParam } from '@movie-module/interfaces';
+import { IParam } from '@movie-module/interfaces';
+import { MovieDTO } from '@movie-module/dto/movie.dto';
 import { Movie } from '@entities/movie.entity';
 import { MovieInterceptor } from '@movie-module/movie.interceptor';
-import { MessageCodeError } from '@config/errors';
 
+@ApiTags('movies')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('/movies')
 export class MovieController {
   constructor(
@@ -34,14 +38,13 @@ export class MovieController {
     if (movie) {
       return movie;
     }
-    const error = new MessageCodeError('notFound', { message: `Movie with id ${param.id} not found` })
-    throw new HttpException(error, error.httpStatus);
+    throw new NotFoundException(`Movie with id ${param.id} not found`);
   }
 
   @UseInterceptors(MovieInterceptor)
   @Post()
   create(
-    @Body() body: IBody,
+    @Body() body: MovieDTO,
   ): Promise<Movie> {
     return this.movieService.create(body);
   }
@@ -50,14 +53,13 @@ export class MovieController {
   @Put('/:id')
   async update(
     @Param() param: IParam,
-    @Body() body: IBody,
+    @Body() body: MovieDTO,
   ): Promise<Movie> {
     const movieFound = await this.movieService.findOne(param.id);
     if (movieFound) {
       return this.movieService.update(param.id, body);
     } else {
-      const error = new MessageCodeError('notFound', { message: `Movie with id ${param.id} not found`})
-      throw new HttpException(error, error.httpStatus);
+      throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
   }
 
@@ -69,8 +71,7 @@ export class MovieController {
     if (movieFound) {
       return this.movieService.inactivate(param.id);
     } else {
-      const error = new MessageCodeError('notFound', { message: `Movie with id ${param.id} not found` })
-      throw new HttpException(error, error.httpStatus);
+      throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
   }
 }

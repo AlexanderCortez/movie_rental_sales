@@ -13,7 +13,8 @@
     "paths": {
       "@config/*": ["./src/config/*"],
       "@entities/*": ["./src/entities/*"],
-      "@movie-module/*": ["./src/modules/movie/*"]
+      "@movie-module/*": ["./src/modules/movie/*"],
+      "@app-module/*": ["./src/modules/app/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
