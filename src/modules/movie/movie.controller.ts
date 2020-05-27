@@ -7,6 +7,7 @@ import {
   Param,
   HttpException,
   UseInterceptors,
+  Delete,
 } from '@nestjs/common';
 import { MovieService } from '@movie-module/movie.service';
 import { IBody, IParam } from '@movie-module/interfaces';
@@ -56,6 +57,19 @@ export class MovieController {
       return this.movieService.update(param.id, body);
     } else {
       const error = new MessageCodeError('notFound', { message: `Movie with id ${param.id} not found`})
+      throw new HttpException(error, error.httpStatus);
+    }
+  }
+
+  @Delete('/:id')
+  async inactivate(
+    @Param() param: IParam,
+  ): Promise<Movie> {
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      return this.movieService.inactivate(param.id);
+    } else {
+      const error = new MessageCodeError('notFound', { message: `Movie with id ${param.id} not found` })
       throw new HttpException(error, error.httpStatus);
     }
   }

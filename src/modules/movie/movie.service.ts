@@ -13,7 +13,7 @@ export class MovieService {
   ) {}
 
   findAll(): Promise<Movie[]> {
-    return this.movieRepository.find();
+    return this.movieRepository.find({ active: true });
   }
 
   create(body: IBody): Promise<Movie> {
@@ -30,7 +30,13 @@ export class MovieService {
     });
   }
 
+  async inactivate(id: number): Promise<Movie> {
+    const movie = await this.findOne(id);
+    movie.active = false;
+    return this.movieRepository.save(movie);
+  }
+
   findOne(id: number): Promise<Movie> {
-    return this.movieRepository.findOne(id)
+    return this.movieRepository.findOne({ id, active: true })
   }
 }

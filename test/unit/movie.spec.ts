@@ -80,4 +80,23 @@ describe('Movie Controller' , () => {
       done();
     })
   });
+
+  describe('DEL /movies/:id', () => {
+    it('should inactivate a movie', async (done) => {
+      const movie = await factory(Movie).make();
+      jest
+        .spyOn(movieService, 'update')
+        .mockResolvedValue(movie);
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+      jest
+        .spyOn(movieService, 'inactivate')
+        .mockResolvedValue(movie);
+      const response: Movie = await movieController.update({ id: movie.id }, movie);
+      expect(response.id).toEqual(movie.id);
+      expect(response).toEqual(movie);
+      done();
+    })
+  });
 });
