@@ -11,7 +11,10 @@
     "baseUrl": "./",
     "incremental": true,
     "paths": {
-      "@config/*": ["./src/config/*"]
+      "@config/*": ["./src/config/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@movie-module/*": ["./src/modules/movie/*"],
+      "@app-module/*": ["./src/modules/app/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
