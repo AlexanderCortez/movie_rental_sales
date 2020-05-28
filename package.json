@@ -31,6 +31,8 @@
   "dependencies": {
     "@nestjs/common": "^7.0.0",
     "@nestjs/core": "^7.0.0",
+    "@nestjs/jwt": "^7.0.0",
+    "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/swagger": "^4.5.8",
     "@nestjs/typeorm": "^7.0.1",
@@ -39,6 +41,9 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "git-repo-info": "^2.1.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -55,6 +60,8 @@
     "@types/faker": "^4.1.12",
     "@types/jest": "25.1.4",
     "@types/node": "^13.9.1",
+    "@types/passport-jwt": "^3.0.3",
+    "@types/passport-local": "^1.0.33",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
@@ -90,7 +97,8 @@
       "^@entities/(.*)": "<rootDir>/src/entities/$1",
       "^@movie-module/(.*)": "<rootDir>/src/modules/movie/$1",
       "^@user-module/(.*)": "<rootDir>/src/modules/user/$1",
-      "^@role-module/(.*)": "<rootDir>/src/modules/role/$1"
+      "^@role-module/(.*)": "<rootDir>/src/modules/role/$1",
+      "^@auth-module/(.*)": "<rootDir>/src/modules/auth/$1"
     }
   }
 }
