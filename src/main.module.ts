@@ -5,6 +5,7 @@ import { MovieModule } from '@movie-module/movie.module';
 import { AppModule } from '@app-module/app.module';
 import { UserModule } from '@user-module/user.module';
 import { RoleModule } from '@role-module/role.module';
+import { AuthModule } from '@auth-module/auth.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { RoleModule } from '@role-module/role.module';
     MovieModule,
     AppModule,
     UserModule,
-    RoleModule
+    RoleModule,
+    AuthModule
   ],
   controllers: [],
 })
