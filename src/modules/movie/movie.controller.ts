@@ -16,13 +16,17 @@ import { IParam } from '@movie-module/interfaces';
 import { MovieDTO } from '@movie-module/dto/movie.dto';
 import { Movie } from '@entities/movie.entity';
 import { MovieInterceptor } from '@movie-module/movie.interceptor';
+import { Sale } from '@entities/sale.entity';
+import { SaleService } from '@sale-module/sale.service';
+import { SaleCreateDTO } from '@sale-module/dto/sale-create.dto';
 
 @ApiTags('movies')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('/movies')
 export class MovieController {
   constructor(
-    private readonly movieService: MovieService 
+    private readonly movieService: MovieService,
+    private readonly saleService: SaleService,
   ) { }
   
   @Get()
@@ -73,5 +77,13 @@ export class MovieController {
     } else {
       throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
+  }
+
+  @Post('/:id/buy')
+  buyAMovie(
+    @Param() param: IParam,
+    @Body() body: SaleCreateDTO
+  ): Promise<Sale> {
+    return this.saleService.buyAMovie();
   }
 }

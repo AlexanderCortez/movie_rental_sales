@@ -3,6 +3,7 @@ import { factory, define } from 'typeorm-factories';
 import { Movie } from '@entities/movie.entity';
 import { User } from '@entities/user.entity';
 import { Role } from '@entities/role.entity';
+import { Sale } from '@entities/sale.entity';
 
 define(Movie, (faker: typeof Faker) => {
   const movie = new Movie();
@@ -47,6 +48,32 @@ define(Role, (faker: typeof Faker) => {
   role.id = random.number();
   role.name = lorem.word();
   return role;
+});
+
+define(Sale, (faker: typeof Faker) => {
+  const { random, name, internet } = faker;
+  
+  const user = new User();
+  user.id = random.number();
+  user.name = name.findName();
+  user.email = internet.email();
+  user.password = internet.password();
+  
+  const role = new Role();
+  role.id = random.number();
+  role.name = 'admin';
+  
+  const movie = new Movie();
+  movie.id = random.number();
+  movie.title = name.title();
+  
+  const sale = new Sale();
+  sale.id = random.number();
+  sale.quantity = random.number();
+  sale.cost = random.number();
+  sale.user = user;
+  sale.movie = movie;
+  return sale;
 });
 
 export default factory;

@@ -3,7 +3,9 @@ import { MovieController } from '@movie-module/movie.controller';
 import { MovieService } from '@movie-module/movie.service';
 import { Movie } from '@entities/movie.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import factory from '../factories';
+import factory from '@test-factory/index';
+import { SaleService } from '@sale-module/sale.service';
+import { Sale } from '@entities/sale.entity';
 
 
 describe('Movie Controller' , () => {
@@ -19,7 +21,12 @@ describe('Movie Controller' , () => {
             provide: getRepositoryToken(Movie),
             useFactory: jest.fn()
           },
-          MovieService
+          {
+            provide: getRepositoryToken(Sale),
+            useFactory: jest.fn()
+          },
+          MovieService,
+          SaleService
         ],
       }).compile();
 
@@ -96,6 +103,25 @@ describe('Movie Controller' , () => {
       const response: Movie = await movieController.update({ id: movie.id }, movie);
       expect(response.id).toEqual(movie.id);
       expect(response).toEqual(movie);
+      done();
+    })
+  });
+
+  describe('POST /movies/:id/buy', () => {
+    it.only('should buy a movie', async (done) => {
+      // const movie = await factory(Movie).make();
+      // jest
+      //   .spyOn(movieService, 'update')
+      //   .mockResolvedValue(movie);
+      // jest
+      //   .spyOn(movieService, 'findOne')
+      //   .mockResolvedValue(movie);
+      // jest
+      //   .spyOn(movieService, 'inactivate')
+      //   .mockResolvedValue(movie);
+      // const response: Movie = await movieController.update({ id: movie.id }, movie);
+      // expect(response.id).toEqual(movie.id);
+      // expect(response).toEqual(movie);
       done();
     })
   });
