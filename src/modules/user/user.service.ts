@@ -13,12 +13,17 @@ export class UserService {
 
   async create(entry: UserDTO): Promise<User> {
     const user = new User(entry);
-    await user.setPassword();
     return this.userRepository.save(user);
   }
 
   findByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({ email, active: true });
+    return this.userRepository.findOne({
+      relations: ['role'],
+      where: {
+        email,
+        active: true,
+      }
+    });
   }
 
   findAll(): Promise<User[]> {
@@ -26,5 +31,9 @@ export class UserService {
       relations: ['role'],
       where: { active: true }
     });
+  }
+
+  count(): Promise<number> {
+    return this.userRepository.count({ active: true });
   }
 }
