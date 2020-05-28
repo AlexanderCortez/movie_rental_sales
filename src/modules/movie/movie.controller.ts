@@ -9,6 +9,8 @@ import {
   Delete,
   NotFoundException,
   ClassSerializerInterceptor,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { MovieService } from '@movie-module/movie.service';
@@ -18,7 +20,9 @@ import { Movie } from '@entities/movie.entity';
 import { MovieInterceptor } from '@movie-module/movie.interceptor';
 import { Sale } from '@entities/sale.entity';
 import { SaleService } from '@sale-module/sale.service';
-import { SaleCreateDTO } from '@sale-module/dto/sale-create.dto';
+import { SaleBodyCreateDTO } from '@sale-module/dto/sale-body-create.dto';
+import { SaleDTO } from '@sale-module/dto/sale.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('movies')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -79,11 +83,24 @@ export class MovieController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('/:id/buy')
-  buyAMovie(
+  async buyAMovie(
+    @Request() req,
     @Param() param: IParam,
-    @Body() body: SaleCreateDTO
+    @Body() body: SaleBodyCreateDTO
   ): Promise<Sale> {
-    return this.saleService.buyAMovie();
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      const data: SaleDTO = {
+        ...body,
+        cost: (body.quantity || 1) * movieFound.salePrice,
+        user: req.user,
+        movie: movieFound
+      }
+      return this.saleService.buyAMovie(data);
+    } else {
+      throw new NotFoundException(`Movie with id ${param.id} not found`);
+    }
   }
 }

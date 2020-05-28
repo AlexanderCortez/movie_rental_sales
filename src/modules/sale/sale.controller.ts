@@ -15,6 +15,6 @@ export class SaleController {
 
   @Get()
   findAll(): Promise<Sale[]> {
-    return this.saleService.findAll();  
+    return this.saleService.findAll();
   }
 }

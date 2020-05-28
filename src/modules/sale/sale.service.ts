@@ -4,6 +4,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sale } from '@entities/sale.entity';
 import { Repository } from 'typeorm';
+import { SaleDTO } from '@sale-module/dto/sale.dto';
 
 @Injectable()
 export class SaleService {
@@ -18,7 +19,7 @@ export class SaleService {
     });
   }
 
-  buyAMovie(): Promise<Sale> {
-    return this.saleRepository.findOne();
+  buyAMovie(entry: SaleDTO): Promise<Sale> {
+    return this.saleRepository.save(entry);
   }
 }

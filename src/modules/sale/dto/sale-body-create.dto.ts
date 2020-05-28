@@ -4,14 +4,9 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SaleCreateDTO {
+export class SaleBodyCreateDTO {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
   quantity: number;
-  
-  @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty()
-  cost: number;
 }
