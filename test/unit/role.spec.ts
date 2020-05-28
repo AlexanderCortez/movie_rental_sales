@@ -3,7 +3,7 @@ import { RoleController } from '@role-module/role.controller';
 import { RoleService } from '@role-module/role.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Role } from '@entities/role.entity';
-import factory from '../factories';
+import factory from '@test-factory/index';
 
 describe('User Controller', () => {
   let roleController: RoleController;

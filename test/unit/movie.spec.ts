@@ -3,12 +3,17 @@ import { MovieController } from '@movie-module/movie.controller';
 import { MovieService } from '@movie-module/movie.service';
 import { Movie } from '@entities/movie.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import factory from '../factories';
+import factory from '@test-factory/index';
+import { SaleService } from '@sale-module/sale.service';
+import { Sale } from '@entities/sale.entity';
+import { User } from '@entities/user.entity';
+import { SaleBodyCreateDTO } from '@sale-module/dto/sale-body-create.dto';
 
 
 describe('Movie Controller' , () => {
   let movieController: MovieController;
   let movieService: MovieService;
+  let saleService: SaleService;
 
   beforeAll(async () => {
     const app: TestingModule = await Test
@@ -19,12 +24,18 @@ describe('Movie Controller' , () => {
             provide: getRepositoryToken(Movie),
             useFactory: jest.fn()
           },
-          MovieService
+          {
+            provide: getRepositoryToken(Sale),
+            useFactory: jest.fn()
+          },
+          MovieService,
+          SaleService
         ],
       }).compile();
 
     movieController = app.get<MovieController>(MovieController);
     movieService = app.get<MovieService>(MovieService);
+    saleService = app.get<SaleService>(SaleService);
   })
   
   describe('GET /movies', () => {
@@ -96,6 +107,26 @@ describe('Movie Controller' , () => {
       const response: Movie = await movieController.update({ id: movie.id }, movie);
       expect(response.id).toEqual(movie.id);
       expect(response).toEqual(movie);
+      done();
+    })
+  });
+
+  describe('POST /movies/:id/buy', () => {
+    it('should buy a movie', async (done) => {
+      const movie = await factory(Movie).make();
+      const user = await factory(User).make();
+      const sale = await factory(Sale).make();
+      jest
+        .spyOn(saleService, 'buyAMovie')
+        .mockResolvedValue(sale);
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+      const body: SaleBodyCreateDTO = {
+        quantity: 12,
+      }
+      const response: Sale = await movieController.buyAMovie({ user }, { id: movie.id }, body)
+      expect(response).toEqual(sale);
       done();
     })
   });

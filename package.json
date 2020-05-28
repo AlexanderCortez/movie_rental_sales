@@ -98,6 +98,8 @@
       "^@movie-module/(.*)": "<rootDir>/src/modules/movie/$1",
       "^@user-module/(.*)": "<rootDir>/src/modules/user/$1",
       "^@role-module/(.*)": "<rootDir>/src/modules/role/$1",
+      "^@sale-module/(.*)": "<rootDir>/src/modules/sale/$1",
+      "^@test-factory/(.*)": "<rootDir>/test/factories/$1",
       "^@auth-module/(.*)": "<rootDir>/src/modules/auth/$1"
     }
   }

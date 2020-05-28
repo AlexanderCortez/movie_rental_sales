@@ -17,6 +17,8 @@
       "@app-module/*": ["./src/modules/app/*"],
       "@user-module/*": ["./src/modules/user/*"],
       "@role-module/*": ["./src/modules/role/*"],
+      "@sale-module/*": ["./src/modules/sale/*"],
+      "@test-factory/*": ["./test/factories/*"],
       "@auth-module/*": ["./src/modules/auth/*"]
     }
   },

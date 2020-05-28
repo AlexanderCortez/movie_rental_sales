@@ -5,7 +5,7 @@ import { RoleService } from '@role-module/role.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '@entities/user.entity';
 import { Role } from '@entities/role.entity';
-import factory from '../factories';
+import factory from '@test-factory/index';
 
 describe('User Controller', () => {
   let userController: UserController;
