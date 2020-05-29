@@ -19,7 +19,8 @@
       "@role-module/*": ["./src/modules/role/*"],
       "@sale-module/*": ["./src/modules/sale/*"],
       "@test-factory/*": ["./test/factories/*"],
-      "@auth-module/*": ["./src/modules/auth/*"]
+      "@auth-module/*": ["./src/modules/auth/*"],
+      "@rent-module/*": ["./src/modules/rent/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

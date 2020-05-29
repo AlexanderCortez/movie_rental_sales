@@ -8,12 +8,16 @@ import { SaleService } from '@sale-module/sale.service';
 import { Sale } from '@entities/sale.entity';
 import { User } from '@entities/user.entity';
 import { SaleBodyCreateDTO } from '@sale-module/dto/sale-body-create.dto';
+import { Rent } from '@entities/rent.entity';
+import { RentService } from '@rent-module/rent.service';
+import { RentBodyCreateDTO } from '@rent-module/dto/rent-body-create.dto';
 
 
 describe('Movie Controller' , () => {
   let movieController: MovieController;
   let movieService: MovieService;
   let saleService: SaleService;
+  let rentService: RentService;
 
   beforeAll(async () => {
     const app: TestingModule = await Test
@@ -28,14 +32,20 @@ describe('Movie Controller' , () => {
             provide: getRepositoryToken(Sale),
             useFactory: jest.fn()
           },
+          {
+            provide: getRepositoryToken(Rent),
+            useFactory: jest.fn()
+          },
           MovieService,
-          SaleService
+          SaleService,
+          RentService,
         ],
       }).compile();
 
     movieController = app.get<MovieController>(MovieController);
     movieService = app.get<MovieService>(MovieService);
     saleService = app.get<SaleService>(SaleService);
+    rentService = app.get<RentService>(RentService);
   })
   
   describe('GET /movies', () => {
@@ -127,6 +137,29 @@ describe('Movie Controller' , () => {
       }
       const response: Sale = await movieController.buyAMovie({ user }, { id: movie.id }, body)
       expect(response).toEqual(sale);
+      done();
+    })
+  });
+
+  describe('POST /movies/:id/rent', () => {
+    it('should rent a movie', async (done) => {
+      const movie = await factory(Movie).make();
+      const user = await factory(User).make();
+      const rent = await factory(Rent).make();
+      jest
+        .spyOn(rentService, 'rentAMovie')
+        .mockResolvedValue(rent);
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+      const body: RentBodyCreateDTO = {
+        quantity: 12,
+        timeframeInDays: 1,
+        monetaryPenaltyOnDelay: 5.6,
+      }
+      const response: Rent = await movieController
+        .rentAMovie({ user }, { id: movie.id }, body);
+      expect(response).toEqual(rent);
       done();
     })
   });

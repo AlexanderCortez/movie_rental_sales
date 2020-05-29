@@ -41,6 +41,7 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "git-repo-info": "^2.1.1",
+    "moment-timezone": "^0.5.31",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
@@ -100,7 +101,8 @@
       "^@role-module/(.*)": "<rootDir>/src/modules/role/$1",
       "^@sale-module/(.*)": "<rootDir>/src/modules/sale/$1",
       "^@test-factory/(.*)": "<rootDir>/test/factories/$1",
-      "^@auth-module/(.*)": "<rootDir>/src/modules/auth/$1"
+      "^@auth-module/(.*)": "<rootDir>/src/modules/auth/$1",
+      "^@rent-module/(.*)": "<rootDir>/src/modules/rent/$1"
     }
   }
 }
