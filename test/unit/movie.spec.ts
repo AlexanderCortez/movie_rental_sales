@@ -152,6 +152,12 @@ describe('Movie Controller' , () => {
       jest
         .spyOn(movieService, 'findOne')
         .mockResolvedValue(movie);
+      jest
+        .spyOn(movieService, 'InOrDecreaseStock')
+        .mockResolvedValue(movie);
+      jest
+        .spyOn(rentService, 'checkPendingDelivery')
+        .mockResolvedValue(null);
       const body: RentBodyCreateDTO = {
         quantity: 12,
         timeframeInDays: 1,
@@ -162,5 +168,30 @@ describe('Movie Controller' , () => {
       expect(response).toEqual(rent);
       done();
     })
+  });
+
+  describe('POST /movies/:id/deliver', () => {
+    it('should deliver a movie', async (done) => {
+      const rent: Rent = await factory(Rent).make();
+      const user: User = await factory(User).make();
+
+      jest
+        .spyOn(rentService, 'findById')
+        .mockResolvedValue(rent);
+
+      jest
+        .spyOn(rentService, 'checkPendingDelivery')
+        .mockResolvedValue(rent);
+
+      jest
+        .spyOn(rentService, 'deliver')
+        .mockResolvedValue(rent);
+
+      const response = await movieController
+        .deliver({ user }, { id: rent.id });
+      
+      expect(response).toEqual(rent);
+      done();
+    });
   });
 });

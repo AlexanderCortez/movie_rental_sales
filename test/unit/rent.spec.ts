@@ -39,21 +39,4 @@ describe('Rent Controller', () => {
       done();
     });
   });
-
-  describe('POST /rents/:id/deliver', () => {
-    it('should deliver a rent', async (done) => {
-      const rent: Rent = await factory(Rent).make();
-      jest
-        .spyOn(rentService, 'findById')
-        .mockResolvedValue(rent);
-
-      jest
-        .spyOn(rentService, 'deliver')
-        .mockResolvedValue(rent);
-
-      const response = await rentController.deliver({ id: rent.id });
-      expect(response).toEqual(rent);
-      done();
-    });
-  });
 });

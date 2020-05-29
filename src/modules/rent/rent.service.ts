@@ -34,4 +34,14 @@ export class RentService {
     rent.deliveredOn = moment().toDate();
     return this.rentRepository.save(rent);
   }
+
+  checkPendingDelivery(userId: number, movieId: number): Promise<Rent> {
+    return this.rentRepository.findOne({
+      where: {
+        delivered: false,
+        movie: movieId,
+        user: userId,
+      }
+    })
+  }
 }

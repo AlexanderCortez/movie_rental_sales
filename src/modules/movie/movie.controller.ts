@@ -11,6 +11,7 @@ import {
   ClassSerializerInterceptor,
   Request,
   UseGuards,
+  BadRequestException
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as moment from 'moment-timezone';
@@ -109,6 +110,7 @@ export class MovieController {
       throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
   }
+
   @UseGuards(AuthGuard('jwt'))
   @Post('/:id/rent')
   async rentAMovie(
@@ -118,6 +120,17 @@ export class MovieController {
   ): Promise<Rent> {
     const movieFound = await this.movieService.findOne(param.id);
     if (movieFound) {
+      if (movieFound.stock < body.quantity) {
+        throw new BadRequestException('There are not enough movies in stock');
+      }
+
+      const pendingDelivery = await this.rentService
+        .checkPendingDelivery(req.user.id, movieFound.id);
+
+      if (pendingDelivery) {
+        throw new BadRequestException(`You have ${pendingDelivery.quantity} pending delivery for this movie`);
+      }
+
       const data: RentDTO = {
         ...body,
         cost: (body.quantity || 1) * movieFound.rentPrice,
@@ -126,10 +139,39 @@ export class MovieController {
         shouldBeDeliveredOn: moment().add((body.timeframeInDays || 1), 'days').toDate(),
         rentedOn: moment().toDate()
       }
-      return this.rentService.rentAMovie(data);
-      return null;
+
+      const rent = await this.rentService.rentAMovie(data);
+      const movie = await this.movieService
+        .InOrDecreaseStock(movieFound.id, body.quantity, 'decrease');
+      
+      rent.movie = movie;
+      return rent;
+
     } else {
       throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/:id/deliver')
+  async deliver(
+    @Request() req,
+    @Param() param,
+  ): Promise<Rent> {
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      const pendingDelivery = await this.rentService
+        .checkPendingDelivery(req.user.id, movieFound.id);
+      if (pendingDelivery) {
+        const rent = await this.rentService.deliver(pendingDelivery.id);
+        const movie = await this.movieService
+          .InOrDecreaseStock(movieFound.id, pendingDelivery.quantity, 'increase');
+
+        rent.movie = movie;
+        return rent;
+      }
+      throw new NotFoundException(`Movie not found to deliver`);
+    }
+    throw new NotFoundException(`Movie with id ${param.id} not found`);
   }
 }
