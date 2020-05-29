@@ -99,13 +99,23 @@ export class MovieController {
   ): Promise<Sale> {
     const movieFound = await this.movieService.findOne(param.id);
     if (movieFound) {
+      if (movieFound.stock < body.quantity) {
+        throw new BadRequestException('There are not enough movies in stock');
+      }
+
       const data: SaleDTO = {
         ...body,
         cost: (body.quantity || 1) * movieFound.salePrice,
         user: req.user,
         movie: movieFound
       }
-      return this.saleService.buyAMovie(data);
+
+      const sale = await this.saleService.buyAMovie(data);
+      const movie = await this.movieService
+        .InOrDecreaseStock(movieFound.id, body.quantity, 'decrease');
+
+      sale.movie = movie;
+      return sale;
     } else {
       throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
