@@ -132,6 +132,9 @@ describe('Movie Controller' , () => {
       jest
         .spyOn(movieService, 'findOne')
         .mockResolvedValue(movie);
+      jest
+        .spyOn(movieService, 'InOrDecreaseStock')
+        .mockResolvedValue(movie);
       const body: SaleBodyCreateDTO = {
         quantity: 12,
       }
