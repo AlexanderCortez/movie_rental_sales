@@ -19,7 +19,6 @@ import { MovieService } from '@movie-module/movie.service';
 import { IParam } from '@movie-module/interfaces';
 import { MovieDTO } from '@movie-module/dto/movie.dto';
 import { Movie } from '@entities/movie.entity';
-import { MovieInterceptor } from '@movie-module/movie.interceptor';
 import { Sale } from '@entities/sale.entity';
 import { SaleService } from '@sale-module/sale.service';
 import { SaleBodyCreateDTO } from '@sale-module/dto/sale-body-create.dto';
@@ -29,6 +28,8 @@ import { Rent } from '@entities/rent.entity';
 import { RentService } from '@rent-module/rent.service';
 import { RentBodyCreateDTO } from '@rent-module/dto/rent-body-create.dto';
 import { RentDTO } from '@rent-module/dto/rent.dto';
+import { Roles } from '@role-module/role.decorator';
+import { RolesGuard } from '@role-module/role.guard';
 
 @ApiTags('movies')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -56,18 +57,18 @@ export class MovieController {
     throw new NotFoundException(`Movie with id ${param.id} not found`);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(MovieInterceptor)
   @Post()
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   create(
     @Body() body: MovieDTO,
   ): Promise<Movie> {
     return this.movieService.create(body);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(MovieInterceptor)
   @Put('/:id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async update(
     @Param() param: IParam,
     @Body() body: MovieDTO,
@@ -80,8 +81,9 @@ export class MovieController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async inactivate(
     @Param() param: IParam,
   ): Promise<Movie> {
@@ -93,8 +95,9 @@ export class MovieController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('/:id/buy')
+  @Roles('admin', 'user')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async buyAMovie(
     @Request() req,
     @Param() param: IParam,
@@ -124,8 +127,9 @@ export class MovieController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('/:id/rent')
+  @Roles('admin', 'user')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async rentAMovie(
     @Request() req,
     @Param() param: IParam,
@@ -165,8 +169,9 @@ export class MovieController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('/:id/deliver')
+  @Roles('admin', 'user')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async deliver(
     @Request() req,
     @Param() param,
