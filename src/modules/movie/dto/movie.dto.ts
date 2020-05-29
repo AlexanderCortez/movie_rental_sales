@@ -6,6 +6,7 @@ import {
   isEmpty,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class MovieDTO {
   @IsNotEmpty()
@@ -37,6 +38,18 @@ export class MovieDTO {
   @IsNumber()
   @ApiProperty()
   salePrice: number;
+
+  @Exclude()
+  likes: number;
+
+  @Exclude()
+  dislikes: number;
+
+  @Exclude()
+  available: boolean;
+
+  @Exclude()
+  active: boolean;
 
   constructor(partial: Partial<object>) {
     Object.assign(this, partial);

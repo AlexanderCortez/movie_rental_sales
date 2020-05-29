@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Raw } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { Movie } from '@entities/movie.entity';
 import { MovieDTO } from '@movie-module/dto/movie.dto';
+import { IQueryParams } from '@movie-module/interfaces/query-params.interface';
+import { QueryDTO } from '@movie-module/dto/query.dto';
+import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
 
 @Injectable()
 export class MovieService {
@@ -12,8 +15,81 @@ export class MovieService {
     private movieRepository: Repository<Movie>
   ) {}
 
-  findAll(): Promise<Movie[]> {
-    return this.movieRepository.find({ active: true });
+  countByAvailability(available: boolean) {
+    return this.movieRepository.count({
+      active: true,
+      available,
+    });
+  }
+
+  buildQuery(params: QueryDTO, isAdmin) {
+    const {
+      limit,
+      page,
+      sortBy,
+      search,
+      available,
+      order
+    } = params;
+    const query: IQueryParams = {
+      where: {
+        active: true,
+        available: true,
+      },
+      order: {}
+    };
+
+    if (isAdmin) {
+      /**
+       * This validation because only admins can see unavailable movies
+       */
+      if(available === false) {
+        query.where.available = false;
+      }
+    }
+
+    if (search) {
+      query.where.title = Raw(title => `${title} ILIKE '%${search}%'`);
+    }
+
+    if (limit && page) {
+      const skips = limit * ((page === 0 ? 1 : page) - 1);
+      query.skip = skips;
+      query.take = limit;
+    }
+
+    const sortOrder: 'ASC' | 'DESC' = ['asc', 'desc'].includes(order)
+      ? order.toUpperCase() as 'ASC' | 'DESC' : 'DESC';
+
+    const orderForTitle = sortOrder === 'ASC' ? 'DESC' : 'ASC';
+
+    if (sortBy === 'title') {
+      query.order.title = orderForTitle;
+    } else if (sortBy === 'popularity') {
+      query.order.likes = sortOrder;
+    } else {
+      query.order.title = orderForTitle;
+    }
+
+    return query;
+  }
+
+  async findAll(query: IQueryParams): Promise<MoviesResponseDTO> {
+    let count: number;
+    const movies = await this.movieRepository.find(query);
+    /**
+     * If title is not searched,
+     * count shows the total of all active movies
+     */
+    if (query.where.title) {
+      count = movies.length;
+    } else {
+      count = await this.countByAvailability(query.where.available);
+    }
+    return {
+      count,
+      movies,
+    }
   }
 
   create(body: MovieDTO): Promise<Movie> {

@@ -11,7 +11,8 @@ import {
   ClassSerializerInterceptor,
   Request,
   UseGuards,
-  BadRequestException
+  BadRequestException,
+  Query
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as moment from 'moment-timezone';
@@ -30,6 +31,8 @@ import { RentBodyCreateDTO } from '@rent-module/dto/rent-body-create.dto';
 import { RentDTO } from '@rent-module/dto/rent.dto';
 import { Roles } from '@role-module/role.decorator';
 import { RolesGuard } from '@role-module/role.guard';
+import { QueryDTO } from '@movie-module/dto/query.dto';
+import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
 
 @ApiTags('movies')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -42,8 +45,20 @@ export class MovieController {
   ) { }
   
   @Get()
-  findAll(): Promise<Movie[]> {
-    return this.movieService.findAll();
+  @UseGuards(AuthGuard('jwt-optional'))
+  findAll(
+    @Request() req,
+    @Query() query: QueryDTO,
+  ): Promise<MoviesResponseDTO> {
+    const { user } = req;
+    let userIsAdmin = false;
+    
+    if (user.role && user.role.name === 'admin') {
+      userIsAdmin = true;
+    }
+
+    const queryParams = this.movieService.buildQuery(query, userIsAdmin);
+    return this.movieService.findAll(queryParams);
   }
 
   @Get('/:id')
