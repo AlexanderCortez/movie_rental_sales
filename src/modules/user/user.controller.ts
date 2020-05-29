@@ -7,12 +7,14 @@ import {
   Get,
   NotFoundException,
   ConflictException,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from '@user-module/user.service';
 import { UserCreateDTO } from '@user-module/dto/user-create.dto';
 import { User } from '@entities/user.entity';
 import { RoleService } from '@role-module/role.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,6 +25,7 @@ export class UserController {
     private readonly roleService: RoleService,
   ) { }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
     @Body() body: UserCreateDTO,
@@ -40,6 +43,7 @@ export class UserController {
     throw new NotFoundException(`Role name (${roleName}) provided not found`);
   }
   
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll(): Promise<User[]> {
     return this.userService.findAll();

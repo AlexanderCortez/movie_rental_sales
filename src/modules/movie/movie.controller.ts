@@ -56,6 +56,7 @@ export class MovieController {
     throw new NotFoundException(`Movie with id ${param.id} not found`);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(MovieInterceptor)
   @Post()
   create(
@@ -64,6 +65,7 @@ export class MovieController {
     return this.movieService.create(body);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(MovieInterceptor)
   @Put('/:id')
   async update(
@@ -78,6 +80,7 @@ export class MovieController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:id')
   async inactivate(
     @Param() param: IParam,
