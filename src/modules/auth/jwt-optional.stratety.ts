@@ -6,6 +6,11 @@ import { UserService } from '@user-module/user.service';
 import { User } from '@entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
+/**
+ * This Guard verify only if a token is provided,
+ * However, it is not required for the next handle.
+ */
+
 @Injectable()
 export class JwtOptionalStrategy extends PassportStrategy(Strategy, 'jwt-optional') {
   constructor(

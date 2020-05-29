@@ -40,6 +40,9 @@ export class MovieService {
     };
 
     if (isAdmin) {
+      /**
+       * This validation because only admins can see unavailable movies
+       */
       if(available === false) {
         query.where.available = false;
       }
@@ -74,6 +77,10 @@ export class MovieService {
   async findAll(query: IQueryParams): Promise<MoviesResponseDTO> {
     let count: number;
     const movies = await this.movieRepository.find(query);
+    /**
+     * If title is not searched,
+     * count shows the total of all active movies
+     */
     if (query.where.title) {
       count = movies.length;
     } else {
