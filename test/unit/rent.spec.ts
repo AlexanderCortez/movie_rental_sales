@@ -47,6 +47,10 @@ describe('Rent Controller', () => {
         .spyOn(rentService, 'findById')
         .mockResolvedValue(rent);
 
+      jest
+        .spyOn(rentService, 'deliver')
+        .mockResolvedValue(rent);
+
       const response = await rentController.deliver({ id: rent.id });
       expect(response).toEqual(rent);
       done();
