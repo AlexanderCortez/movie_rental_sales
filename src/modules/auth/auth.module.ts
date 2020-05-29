@@ -11,6 +11,7 @@ import { LocalStrategy } from '@auth-module/local.strategy';
 import { Role } from '@entities/role.entity';
 import { RoleService } from '@role-module/role.service';
 import { JwtStrategy } from '@auth-module/jwt.strategy';
+import { JwtOptionalStrategy } from '@auth-module/jwt-optional.stratety';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { JwtStrategy } from '@auth-module/jwt.strategy';
     JwtStrategy,
     UserService,
     RoleService,
+    JwtOptionalStrategy,
   ],
   controllers: [AuthController],
 })

@@ -11,6 +11,7 @@ import { SaleBodyCreateDTO } from '@sale-module/dto/sale-body-create.dto';
 import { Rent } from '@entities/rent.entity';
 import { RentService } from '@rent-module/rent.service';
 import { RentBodyCreateDTO } from '@rent-module/dto/rent-body-create.dto';
+import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
 
 
 describe('Movie Controller' , () => {
@@ -51,12 +52,16 @@ describe('Movie Controller' , () => {
   describe('GET /movies', () => {
     it('show return all movies', async (done) => {
       const movies = await factory(Movie).makeMany(2);
+      const user = await factory(User).make();
       jest
         .spyOn(movieService, 'findAll')
-        .mockResolvedValue(movies)
-      const response: Movie[] = await movieController.findAll();
-      expect(response.length).toBe(movies.length);
-      expect(response).toEqual(movies);
+        .mockResolvedValue({
+          count: movies.length,
+          movies,
+        });
+      const response: MoviesResponseDTO = await movieController.findAll({ user }, {});
+      expect(response.count).toBe(movies.length);
+      expect(response.movies).toEqual(movies);
       done();
     })
   });
