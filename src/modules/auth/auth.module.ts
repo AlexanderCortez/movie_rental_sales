@@ -6,7 +6,7 @@ import { AuthService } from '@auth-module/auth.service';
 import { AuthController } from '@auth-module/auth.controller';
 import { UserService } from '@user-module/user.service';
 import { User } from '@entities/user.entity';
-import { jwtConstants } from '@auth-module/constants';
+import { jwtConstants } from '@config/constants/constants';
 import { LocalStrategy } from '@auth-module/local.strategy';
 import { Role } from '@entities/role.entity';
 import { RoleService } from '@role-module/role.service';

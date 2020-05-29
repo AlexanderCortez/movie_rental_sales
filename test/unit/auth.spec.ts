@@ -5,7 +5,7 @@ import { UserService } from '@user-module/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '@entities/user.entity';
-import { jwtConstants } from '@auth-module/constants';
+import { jwtConstants } from '@config/constants/constants';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from '@auth-module/local.strategy';
 import { JwtStrategy } from '@auth-module/jwt.strategy';
@@ -13,7 +13,7 @@ import { RoleService } from '@role-module/role.service';
 import { Role } from '@entities/role.entity';
 import factory from '../factories';
 
-describe.only('Auth Controller', () => {
+describe('Auth Controller', () => {
   let authController: AuthController;
   let userService: UserService;
   let roleService: RoleService;

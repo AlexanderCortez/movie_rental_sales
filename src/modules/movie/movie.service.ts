@@ -39,4 +39,21 @@ export class MovieService {
   findOne(id: number): Promise<Movie> {
     return this.movieRepository.findOne({ id, active: true })
   }
+
+  async InOrDecreaseStock(
+    id: number,
+    quantity: number,
+    type: 'decrease' | 'increase'
+  ): Promise<Movie> {
+    const movie = await this.movieRepository.findOne(id);
+    const currentStock = movie.stock;
+    if (type === 'increase') {
+      movie.stock = currentStock + quantity;
+    }
+    if (type === 'decrease') {
+      const newStock = currentStock - quantity; 
+      movie.stock = newStock < 0 ? 0 : newStock;
+    }
+    return this.movieRepository.save(movie);
+  }
 }

@@ -7,6 +7,7 @@ import { UserModule } from '@user-module/user.module';
 import { RoleModule } from '@role-module/role.module';
 import { SaleModule } from '@sale-module/sale.module';
 import { AuthModule } from '@auth-module/auth.module';
+import { RentModule } from '@rent-module/rent.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { AuthModule } from '@auth-module/auth.module';
     UserModule,
     RoleModule,
     SaleModule,
-    AuthModule
+    AuthModule,
+    RentModule
   ],
   controllers: [],
 })
