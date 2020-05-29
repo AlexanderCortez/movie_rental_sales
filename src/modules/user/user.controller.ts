@@ -15,6 +15,8 @@ import { UserCreateDTO } from '@user-module/dto/user-create.dto';
 import { User } from '@entities/user.entity';
 import { RoleService } from '@role-module/role.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '@role-module/role.decorator';
+import { RolesGuard } from '@role-module/role.guard';
 
 @ApiTags('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -25,8 +27,9 @@ export class UserController {
     private readonly roleService: RoleService,
   ) { }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post()
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async create(
     @Body() body: UserCreateDTO,
   ): Promise<User> {
@@ -43,8 +46,9 @@ export class UserController {
     throw new NotFoundException(`Role name (${roleName}) provided not found`);
   }
   
-  @UseGuards(AuthGuard('jwt'))
   @Get()
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
