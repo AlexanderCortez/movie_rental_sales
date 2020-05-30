@@ -102,7 +102,8 @@
       "^@sale-module/(.*)": "<rootDir>/src/modules/sale/$1",
       "^@test-factory/(.*)": "<rootDir>/test/factories/$1",
       "^@auth-module/(.*)": "<rootDir>/src/modules/auth/$1",
-      "^@rent-module/(.*)": "<rootDir>/src/modules/rent/$1"
+      "^@rent-module/(.*)": "<rootDir>/src/modules/rent/$1",
+      "^@reaction-module/(.*)": "<rootDir>/src/modules/reaction/$1"
     }
   }
 }

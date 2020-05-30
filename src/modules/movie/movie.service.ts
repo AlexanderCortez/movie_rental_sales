@@ -138,4 +138,24 @@ export class MovieService {
     movie.available = available;
     return this.movieRepository.save(movie);
   }
+
+  async increaseLikes(id: number, decreaseDislikes: boolean): Promise<Movie> {
+    const movie = await this.findOne(id);
+    movie.likes = movie.likes + 1;
+    if (decreaseDislikes) {
+      const newDislikes = movie.dislikes - 1;
+      movie.dislikes = newDislikes < 0 ? 0 : newDislikes;
+    }
+    return this.movieRepository.save(movie);
+  }
+
+  async increaseDislikes(id: number, decreaseLikes: boolean): Promise<Movie> {
+    const movie = await this.findOne(id);
+    movie.dislikes = movie.dislikes + 1;
+    if (decreaseLikes) {
+      const newLikes = movie.likes - 1;
+      movie.likes = newLikes < 0 ? 0 : newLikes;
+    }
+    return this.movieRepository.save(movie);
+  }
 }

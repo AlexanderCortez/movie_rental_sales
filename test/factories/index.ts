@@ -5,6 +5,7 @@ import { User } from '@entities/user.entity';
 import { Role } from '@entities/role.entity';
 import { Sale } from '@entities/sale.entity';
 import { Rent } from '@entities/rent.entity';
+import { Reaction } from '@entities/reaction.entity';
 
 define(Movie, (faker: typeof Faker) => {
   const movie = new Movie();
@@ -100,6 +101,33 @@ define(Rent, (faker: typeof Faker) => {
   rent.quantity = random.number();
   rent.id = random.number();
   return rent;
+});
+
+define(Reaction, (faker: typeof Faker) => {
+  const reaction = new Reaction();
+  const { random, name, internet } = faker;
+  
+  const user = new User();
+  user.id = random.number();
+  user.name = name.findName();
+  user.email = internet.email();
+  user.password = internet.password();
+
+  const role = new Role();
+  role.id = random.number();
+  role.name = 'admin';
+
+  const movie = new Movie();
+  movie.id = random.number();
+  movie.title = name.title();
+
+  reaction.movie = movie;
+  reaction.user = user;
+
+  reaction.id = random.number();
+  reaction.dislike = random.boolean();
+  reaction.like = random.boolean();
+  return reaction;
 });
 
 

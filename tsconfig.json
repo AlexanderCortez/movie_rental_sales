@@ -20,7 +20,8 @@
       "@sale-module/*": ["./src/modules/sale/*"],
       "@test-factory/*": ["./test/factories/*"],
       "@auth-module/*": ["./src/modules/auth/*"],
-      "@rent-module/*": ["./src/modules/rent/*"]
+      "@rent-module/*": ["./src/modules/rent/*"],
+      "@reaction-module/*": ["./src/modules/reaction/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
