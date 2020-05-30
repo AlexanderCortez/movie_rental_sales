@@ -8,6 +8,7 @@ import { RoleModule } from '@role-module/role.module';
 import { SaleModule } from '@sale-module/sale.module';
 import { AuthModule } from '@auth-module/auth.module';
 import { RentModule } from '@rent-module/rent.module';
+import { ReactionModule } from '@reaction-module/reaction.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { RentModule } from '@rent-module/rent.module';
     RoleModule,
     SaleModule,
     AuthModule,
-    RentModule
+    RentModule,
+    ReactionModule,
   ],
   controllers: [],
 })

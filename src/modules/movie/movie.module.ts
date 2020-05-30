@@ -7,10 +7,17 @@ import { SaleService } from '@sale-module/sale.service';
 import { Sale } from '@entities/sale.entity';
 import { RentService } from '@rent-module/rent.service';
 import { Rent } from '@entities/rent.entity';
+import { ReactionService } from '@reaction-module/reaction.service';
+import { Reaction } from '@entities/reaction.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Movie, Sale, Rent])],
-  providers: [MovieService, SaleService, RentService],
+  imports: [TypeOrmModule.forFeature([Movie, Sale, Rent, Reaction])],
+  providers: [
+    MovieService,
+    SaleService,
+    RentService,
+    ReactionService,
+  ],
   controllers: [MovieController]
 })
 export class MovieModule {}

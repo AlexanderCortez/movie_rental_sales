@@ -12,6 +12,8 @@ import { Rent } from '@entities/rent.entity';
 import { RentService } from '@rent-module/rent.service';
 import { RentBodyCreateDTO } from '@rent-module/dto/rent-body-create.dto';
 import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
+import { ReactionService } from '@reaction-module/reaction.service';
+import { Reaction } from '@entities/reaction.entity';
 
 
 describe('Movie Controller' , () => {
@@ -19,6 +21,7 @@ describe('Movie Controller' , () => {
   let movieService: MovieService;
   let saleService: SaleService;
   let rentService: RentService;
+  let reactionService: ReactionService;
 
   beforeAll(async () => {
     const app: TestingModule = await Test
@@ -37,9 +40,14 @@ describe('Movie Controller' , () => {
             provide: getRepositoryToken(Rent),
             useFactory: jest.fn()
           },
+          {
+            provide: getRepositoryToken(Reaction),
+            useFactory: jest.fn()
+          },
           MovieService,
           SaleService,
           RentService,
+          ReactionService,
         ],
       }).compile();
 
@@ -47,6 +55,7 @@ describe('Movie Controller' , () => {
     movieService = app.get<MovieService>(MovieService);
     saleService = app.get<SaleService>(SaleService);
     rentService = app.get<RentService>(RentService);
+    reactionService = app.get<ReactionService>(ReactionService);
   })
   
   describe('GET /movies', () => {
@@ -239,6 +248,82 @@ describe('Movie Controller' , () => {
         .setAsUnAvailable({ id: movie.id });
       
       expect(response).toEqual(movie);
+      done();
+    });
+  });
+
+  describe('POST /movies/:id/like', () => {
+    it('should like a movie', async (done) => {
+      const movie: Movie = await factory(Movie).make();
+      const user: User = await factory(User).make();
+      const reaction: Reaction = await factory(Reaction).make();
+
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+      
+      jest
+        .spyOn(reactionService, 'findByUserAndMovie')
+        .mockResolvedValue(null);
+
+      jest
+        .spyOn(reactionService, 'createAReaction')
+        .mockResolvedValue(reaction);
+
+      jest
+        .spyOn(reactionService, 'likeAMovie')
+        .mockResolvedValue(reaction);
+
+      jest
+        .spyOn(movieService, 'increaseLikes')
+        .mockResolvedValue(movie);
+
+      jest
+        .spyOn(reactionService, 'findById')
+        .mockResolvedValue(reaction);
+
+      const response = await movieController
+        .likeAMovie({ user }, { id: movie.id });
+
+      expect(response).toEqual(reaction);
+      done();
+    });
+  });
+
+  describe('POST /movies/:id/dislike', () => {
+    it('should dislike a movie', async (done) => {
+      const movie: Movie = await factory(Movie).make();
+      const user: User = await factory(User).make();
+      const reaction: Reaction = await factory(Reaction).make();
+
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+      
+      jest
+        .spyOn(reactionService, 'findByUserAndMovie')
+        .mockResolvedValue(null);
+
+      jest
+        .spyOn(reactionService, 'createAReaction')
+        .mockResolvedValue(reaction);
+
+      jest
+        .spyOn(reactionService, 'dislikeAMovie')
+        .mockResolvedValue(reaction);
+
+      jest
+        .spyOn(movieService, 'increaseDislikes')
+        .mockResolvedValue(movie);
+
+      jest
+        .spyOn(reactionService, 'findById')
+        .mockResolvedValue(reaction);
+
+      const response = await movieController
+        .dislikeAMovie({ user }, { id: movie.id });
+
+      expect(response).toEqual(reaction);
       done();
     });
   });

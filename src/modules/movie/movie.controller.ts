@@ -34,6 +34,8 @@ import { Roles } from '@role-module/role.decorator';
 import { RolesGuard } from '@role-module/role.guard';
 import { QueryDTO } from '@movie-module/dto/query.dto';
 import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
+import { ReactionService } from '@reaction-module/reaction.service';
+import { Reaction } from '@entities/reaction.entity';
 
 @ApiTags('movies')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -43,6 +45,7 @@ export class MovieController {
     private readonly movieService: MovieService,
     private readonly saleService: SaleService,
     private readonly rentService: RentService,
+    private readonly reactionService: ReactionService,
   ) { }
   
   @Get()
@@ -231,6 +234,76 @@ export class MovieController {
     const movieFound = await this.movieService.findOne(param.id);
     if (movieFound) {
       return this.movieService.setAvailability(param.id, false);
+    }
+    throw new NotFoundException(`Movie with id ${param.id} not found`);
+  }
+
+  @Post('/:id/like')
+  @Roles('admin', 'user')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async likeAMovie(
+    @Request() req,
+    @Param() param: IParam,
+  ): Promise<Reaction> {
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      const reactionExists = await this.reactionService
+        .findByUserAndMovie(req.user.id, movieFound.id);
+
+      let reaction: Reaction = reactionExists;
+      if (!reactionExists) {
+        reaction = await this.reactionService.createAReaction({
+          movie: movieFound,
+          user: req.user,
+        });
+        const like = await this.reactionService.likeAMovie(reaction.id);
+        const movie = await this.movieService.increaseLikes(movieFound.id, false);
+        like.movie = movie;
+        return like;
+      }
+
+      if (reaction.dislike && !reaction.like) {
+        const like = await this.reactionService.likeAMovie(reaction.id);
+        const movie = await this.movieService.increaseLikes(movieFound.id, true);
+        like.movie = movie;
+        return like;
+      }
+      return reaction;
+    }
+    throw new NotFoundException(`Movie with id ${param.id} not found`);
+  }
+
+  @Post('/:id/dislike')
+  @Roles('admin', 'user')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async dislikeAMovie(
+    @Request() req,
+    @Param() param: IParam,
+  ): Promise<Reaction> {
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      const reactionExists = await this.reactionService
+        .findByUserAndMovie(req.user.id, movieFound.id);
+
+      let reaction: Reaction = reactionExists;
+      if (!reactionExists) {
+        reaction = await this.reactionService.createAReaction({
+          movie: movieFound,
+          user: req.user,
+        });
+        const like = await this.reactionService.dislikeAMovie(reaction.id);
+        const movie = await this.movieService.increaseDislikes(movieFound.id, false);
+        like.movie = movie;
+        return like;
+      }
+
+      if (reaction.like && !reaction.dislike) {
+        const like = await this.reactionService.dislikeAMovie(reaction.id);
+        const movie = await this.movieService.increaseDislikes(movieFound.id, true);
+        like.movie = movie;
+        return like;
+      }
+      return reaction;
     }
     throw new NotFoundException(`Movie with id ${param.id} not found`);
   }
