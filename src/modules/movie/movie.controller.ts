@@ -12,7 +12,8 @@ import {
   Request,
   UseGuards,
   BadRequestException,
-  Query
+  Query,
+  Patch
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as moment from 'moment-timezone';
@@ -204,6 +205,32 @@ export class MovieController {
         return rent;
       }
       throw new NotFoundException(`Movie not found to deliver`);
+    }
+    throw new NotFoundException(`Movie with id ${param.id} not found`);
+  }
+
+  @Patch('/:id/available')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async setAsAvailable(
+    @Param() param: IParam
+  ): Promise<Movie> {
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      return this.movieService.setAvailability(param.id, true);
+    }
+    throw new NotFoundException(`Movie with id ${param.id} not found`);
+  }
+
+  @Patch('/:id/unavailable')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async setAsUnAvailable(
+    @Param() param: IParam
+  ): Promise<Movie> {
+    const movieFound = await this.movieService.findOne(param.id);
+    if (movieFound) {
+      return this.movieService.setAvailability(param.id, false);
     }
     throw new NotFoundException(`Movie with id ${param.id} not found`);
   }

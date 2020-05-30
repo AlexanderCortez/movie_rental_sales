@@ -132,4 +132,10 @@ export class MovieService {
     }
     return this.movieRepository.save(movie);
   }
+
+  async setAvailability(id: number, available: boolean): Promise<Movie> {
+    const movie = await this.findOne(id);
+    movie.available = available;
+    return this.movieRepository.save(movie);
+  }
 }
