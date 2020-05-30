@@ -202,4 +202,44 @@ describe('Movie Controller' , () => {
       done();
     });
   });
+
+  describe('PATCH /movies/:id/available', () => {
+    it('should set a movie as available', async (done) => {
+      const movie: Movie = await factory(Movie).make();
+
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+
+      jest
+        .spyOn(movieService, 'setAvailability')
+        .mockResolvedValue(movie);
+
+      const response = await movieController
+        .setAsAvailable({ id: movie.id });
+      
+      expect(response).toEqual(movie);
+      done();
+    });
+  });
+
+  describe('PATCH /movies/:id/unavailable', () => {
+    it('should set a movie as unavailable', async (done) => {
+      const movie: Movie = await factory(Movie).make();
+
+      jest
+        .spyOn(movieService, 'findOne')
+        .mockResolvedValue(movie);
+
+      jest
+        .spyOn(movieService, 'setAvailability')
+        .mockResolvedValue(movie);
+
+      const response = await movieController
+        .setAsUnAvailable({ id: movie.id });
+      
+      expect(response).toEqual(movie);
+      done();
+    });
+  });
 });
