@@ -9,14 +9,19 @@ import { RentService } from '@rent-module/rent.service';
 import { Rent } from '@entities/rent.entity';
 import { ReactionService } from '@reaction-module/reaction.service';
 import { Reaction } from '@entities/reaction.entity';
+import { LogService } from '@log-module/log.service';
+import { Log } from '@entities/log.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Movie, Sale, Rent, Reaction])],
+  imports: [TypeOrmModule.forFeature([
+    Movie, Sale, Rent, Reaction, Log
+  ])],
   providers: [
     MovieService,
     SaleService,
     RentService,
     ReactionService,
+    LogService,
   ],
   controllers: [MovieController]
 })

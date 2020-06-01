@@ -36,6 +36,8 @@ import { QueryDTO } from '@movie-module/dto/query.dto';
 import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
 import { ReactionService } from '@reaction-module/reaction.service';
 import { Reaction } from '@entities/reaction.entity';
+import { LogService } from '@log-module/log.service';
+import { momentConstants } from '@config/constants/constants';
 
 @ApiTags('movies')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -46,6 +48,7 @@ export class MovieController {
     private readonly saleService: SaleService,
     private readonly rentService: RentService,
     private readonly reactionService: ReactionService,
+    private readonly logService: LogService,
   ) { }
   
   @Get()
@@ -94,7 +97,12 @@ export class MovieController {
   ): Promise<Movie> {
     const movieFound = await this.movieService.findOne(param.id);
     if (movieFound) {
-      return this.movieService.update(param.id, body);
+      const movie = await this.movieService.update(param.id, body);
+      const logDescription = this.movieService
+        .buildLogDescription(movieFound, movie);
+      
+      await this.logService.create(logDescription);
+      return movie;
     } else {
       throw new NotFoundException(`Movie with id ${param.id} not found`);
     }
@@ -140,6 +148,11 @@ export class MovieController {
         .InOrDecreaseStock(movieFound.id, body.quantity, 'decrease');
 
       sale.movie = movie;
+
+      const logDescription = this.saleService
+        .buildLogDescription(sale, req.user);
+      
+      await this.logService.create(logDescription);
       return sale;
     } else {
       throw new NotFoundException(`Movie with id ${param.id} not found`);
@@ -172,8 +185,9 @@ export class MovieController {
         cost: (body.quantity || 1) * movieFound.rentPrice,
         user: req.user,
         movie: movieFound,
-        shouldBeDeliveredOn: moment().add((body.timeframeInDays || 1), 'days').toDate(),
-        rentedOn: moment().toDate()
+        shouldBeDeliveredOn: moment().tz(momentConstants.timezone)
+          .add((body.timeframeInDays || 1), 'days').toDate(),
+        rentedOn: moment().tz(momentConstants.timezone).toDate()
       }
 
       const rent = await this.rentService.rentAMovie(data);
@@ -181,6 +195,10 @@ export class MovieController {
         .InOrDecreaseStock(movieFound.id, body.quantity, 'decrease');
       
       rent.movie = movie;
+      const logDescription = this.rentService
+        .buildLogDescription(rent, req.user);
+      
+      await this.logService.create(logDescription);
       return rent;
 
     } else {

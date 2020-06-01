@@ -9,6 +9,7 @@ import { SaleModule } from '@sale-module/sale.module';
 import { AuthModule } from '@auth-module/auth.module';
 import { RentModule } from '@rent-module/rent.module';
 import { ReactionModule } from '@reaction-module/reaction.module';
+import { LogModule } from '@log-module/log.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReactionModule } from '@reaction-module/reaction.module';
     AuthModule,
     RentModule,
     ReactionModule,
+    LogModule,
   ],
   controllers: [],
 })

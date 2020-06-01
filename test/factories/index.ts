@@ -6,6 +6,7 @@ import { Role } from '@entities/role.entity';
 import { Sale } from '@entities/sale.entity';
 import { Rent } from '@entities/rent.entity';
 import { Reaction } from '@entities/reaction.entity';
+import { Log } from '@entities/log.entity';
 
 define(Movie, (faker: typeof Faker) => {
   const movie = new Movie();
@@ -130,5 +131,13 @@ define(Reaction, (faker: typeof Faker) => {
   return reaction;
 });
 
+define(Log, (faker: typeof Faker) => {
+  const log = new Log();
+  const { random, lorem } = faker;
+  log.id = random.number();
+  log.reference = random.number();
+  log.description = lorem.paragraph();
+  return log;
+});
 
 export default factory;

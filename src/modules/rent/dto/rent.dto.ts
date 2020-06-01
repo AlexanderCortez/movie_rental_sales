@@ -1,5 +1,5 @@
-import { Movie } from "@entities/movie.entity";
-import { User } from "@entities/user.entity";
+import { Movie } from '@entities/movie.entity';
+import { User } from '@entities/user.entity';
 
 export class RentDTO {
   movie: Movie;
