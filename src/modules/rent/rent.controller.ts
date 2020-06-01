@@ -4,7 +4,9 @@ import { RentService } from '@rent-module/rent.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '@role-module/role.decorator';
 import { RolesGuard } from '@role-module/role.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('rents')
 @Controller('/rents')
 export class RentController {
   constructor(

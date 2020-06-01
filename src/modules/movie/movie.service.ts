@@ -7,6 +7,7 @@ import { MovieDTO } from '@movie-module/dto/movie.dto';
 import { IQueryParams } from '@movie-module/interfaces/query-params.interface';
 import { QueryDTO } from '@movie-module/dto/query.dto';
 import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
+import { ILog } from '@log-module/interface/log.interface';
 
 @Injectable()
 export class MovieService {
@@ -157,5 +158,21 @@ export class MovieService {
       movie.likes = newLikes < 0 ? 0 : newLikes;
     }
     return this.movieRepository.save(movie);
+  }
+
+  buildLogDescription(previousMovie: Movie, movie: Movie): ILog {
+    const {
+      title,
+      rentPrice,
+      salePrice
+    } = previousMovie
+    const previous = `title: ${title}, rental price: ${rentPrice}, sale Price: ${salePrice}`;
+    const update = `title: ${movie.title}, rental price: ${movie.rentPrice}, sale Price: ${movie.salePrice}`;
+    const description = `Movie was updated\n From: ${previous} \n To: ${update}`;
+    return {
+      entity: 'Movie',
+      reference: movie.id,
+      description,
+    }
   }
 }

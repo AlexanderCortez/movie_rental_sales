@@ -4,7 +4,9 @@ import { Reaction } from '@entities/reaction.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@role-module/role.guard';
 import { Roles } from '@role-module/role.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('reactions')
 @Controller('reactions')
 export class ReactionController {
   constructor(

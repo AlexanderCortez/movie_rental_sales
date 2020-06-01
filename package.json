@@ -103,7 +103,8 @@
       "^@test-factory/(.*)": "<rootDir>/test/factories/$1",
       "^@auth-module/(.*)": "<rootDir>/src/modules/auth/$1",
       "^@rent-module/(.*)": "<rootDir>/src/modules/rent/$1",
-      "^@reaction-module/(.*)": "<rootDir>/src/modules/reaction/$1"
+      "^@reaction-module/(.*)": "<rootDir>/src/modules/reaction/$1",
+      "^@log-module/(.*)": "<rootDir>/src/modules/log/$1"
     }
   }
 }

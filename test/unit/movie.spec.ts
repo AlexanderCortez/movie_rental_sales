@@ -14,6 +14,8 @@ import { RentBodyCreateDTO } from '@rent-module/dto/rent-body-create.dto';
 import { MoviesResponseDTO } from '@movie-module/dto/movies-response.dto';
 import { ReactionService } from '@reaction-module/reaction.service';
 import { Reaction } from '@entities/reaction.entity';
+import { LogService } from '@log-module/log.service';
+import { Log } from '@entities/log.entity';
 
 
 describe('Movie Controller' , () => {
@@ -22,32 +24,23 @@ describe('Movie Controller' , () => {
   let saleService: SaleService;
   let rentService: RentService;
   let reactionService: ReactionService;
+  let logService: LogService;
 
   beforeAll(async () => {
     const app: TestingModule = await Test
       .createTestingModule({
         controllers: [MovieController],
         providers: [
-          {
-            provide: getRepositoryToken(Movie),
-            useFactory: jest.fn()
-          },
-          {
-            provide: getRepositoryToken(Sale),
-            useFactory: jest.fn()
-          },
-          {
-            provide: getRepositoryToken(Rent),
-            useFactory: jest.fn()
-          },
-          {
-            provide: getRepositoryToken(Reaction),
-            useFactory: jest.fn()
-          },
+          { provide: getRepositoryToken(Movie), useFactory: jest.fn() },
+          { provide: getRepositoryToken(Sale), useFactory: jest.fn() },
+          { provide: getRepositoryToken(Rent), useFactory: jest.fn() },
+          { provide: getRepositoryToken(Reaction), useFactory: jest.fn() },
+          { provide: getRepositoryToken(Log), useFactory: jest.fn() },
           MovieService,
           SaleService,
           RentService,
           ReactionService,
+          LogService,
         ],
       }).compile();
 
@@ -56,7 +49,17 @@ describe('Movie Controller' , () => {
     saleService = app.get<SaleService>(SaleService);
     rentService = app.get<RentService>(RentService);
     reactionService = app.get<ReactionService>(ReactionService);
-  })
+    logService = app.get<LogService>(LogService);
+  });
+
+  beforeEach(async (done) => {
+    const log: Log = await factory(Log).make();
+    jest
+      .spyOn(logService, 'create')
+      .mockResolvedValueOnce(log);
+    done();
+  });
+
   
   describe('GET /movies', () => {
     it('show return all movies', async (done) => {

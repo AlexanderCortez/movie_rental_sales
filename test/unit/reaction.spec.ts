@@ -28,7 +28,7 @@ describe('Reaction Controller', () => {
   });
 
   describe('GET /reactions', () => {
-    it('should return all movies', async (done) => {
+    it('should return all reactions', async (done) => {
       const reactions: Reaction[] = await factory(Reaction).makeMany(5);
       
       jest
